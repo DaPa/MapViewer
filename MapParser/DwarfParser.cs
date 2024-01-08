@@ -24,6 +24,7 @@ using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Text;
+using System.Windows.Forms;
 
 namespace MapViewer
 {
@@ -246,10 +247,22 @@ namespace MapViewer
             string[] e2 = cu[COMPILATION_UNIT_NAME_INDEX + 1].Split(new char[0], StringSplitOptions.RemoveEmptyEntries);
             string compilePath = e2[e2.Length - 1];
 
-            if (!Path.IsPathRooted(fullPath)) // Don't do anything if we already have the full path
-                name = Path.GetFullPath(compilePath + fullPath); // GetFullPath(baseDir, relativePath);
-            else
-                name = fullPath;
+
+            try
+            {
+                if (!Path.IsPathRooted(fullPath)) // Don't do anything if we already have the full path
+                    name = Path.GetFullPath(compilePath + fullPath); // GetFullPath(baseDir, relativePath);
+                else
+                    name = fullPath;
+            }
+            catch (System.Exception ex)
+            {
+                MessageBox.Show("Error parsing path " + fullPath + ": " + ex.ToString(), "ERROR", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                name = "";
+            }
+            finally
+            {
+            }
 
             return name;
         }
